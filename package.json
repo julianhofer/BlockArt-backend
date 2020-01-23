@@ -14,5 +14,17 @@
     "ethers": "^4.0.43",
     "express": "^4.17.1",
     "mysql": "^2.17.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julianhofer/BlockArt-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/julianhofer/BlockArt-backend/issues"
+  },
+  "homepage": "https://github.com/julianhofer/BlockArt-backend#readme"
 }
