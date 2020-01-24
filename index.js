@@ -3,6 +3,10 @@ const { conn } = require('./DBConnection.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const Methods = require('./ethers');
+
+var transferOwner = Methods.transferOwner;
+// var contract = Methods.contract;
 // const mysql = require('mysql');
 
 
@@ -80,6 +84,61 @@ app.delete('/api/users/:user_id', (req, res) => {
         if (err) throw err;
         res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
     });
+});
+
+// Get artHash and userToken from Ownership
+
+// Get users with another or no artHash
+// SELECT username FROM blockart.users WHERE ( user_token != ( SELECT user_token FROM ownership WHERE arthash = 'dritterArthash'));
+
+// Put new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
+app.get('/api/ownership/newOwner/', (req, res) => {
+
+    var getChangeOwnerData = async function () {
+
+        var artHash = req.body.artHash;
+        var userToken = req.body.user_token;
+        var userName = req.body.userName;
+        let artSql = "";
+        let privSql = "";
+        let pubSql = "";
+        try {
+            let artQuery = await conn.query(artSql, (err, contract) => {
+                if (err) throw err;
+                return contract;
+            });
+
+            let privQuery = await conn.query(privSql, (err, privKey) => {
+                if (err) throw err;
+                return privKey;
+            });
+
+            let pubQuery = await conn.query(pubSql, (err, pubKey) => {
+                if (err) throw err;
+                return pubKey;
+            });
+
+        } catch (err) {
+            logger.error("Error while getting the data from the mySql database")
+        }
+
+
+
+
+
+        artQuery.then((contract) => {
+
+        })
+
+    }
+    // contract.owner().then((owner) => {
+
+    //     if (req != owner) {
+    //         transferOwner.then((newOwner) => {
+    //             res.send(JSON.stringify({ "status": 200, "error": null, "response": newOwner }));
+    //         })
+    //     }
+    // });
 });
 
 

@@ -4,6 +4,7 @@ const ethers = require('ethers');
 const smartContract = require('./contracts/ArtWorkContract')
 
 
+
 const contractAddress = '0x36ed56f5e2160d46c3cbeee285298cbe2f0b0022';
 const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 const abi = smartContract.abi;
@@ -14,10 +15,9 @@ let wallet = new ethers.Wallet("0x" + privateKeys[2], provider);
 let contractWithSigner = contract.connect(wallet);
 
 
-transferOwner();
-// transferEvent();
 
-async function transferOwner() {
+
+var transferOwner = async function () {
 
     contract.owner().then((owner) => {
         console.log("oldOwner: ", owner)
@@ -27,11 +27,17 @@ async function transferOwner() {
         console.log("TransferHash: ", transferOs.hash);
         await transferOs.wait();
         let newOwner = await contract.owner();
-
+        return newOwner;
     } catch (err) {
         logger.error("Error while transfering Ownership")
     }
 };
+
+module.exports = {
+    transferOwner: transferOwner(),
+    contract: contract
+}
+
 
 // Called when anyone changes the value
 // function transferEvent() {
@@ -55,6 +61,7 @@ contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
 //     console.log(newOwner)
 // })
 //     .catch(err => console.error(err))
-
-
-
+// module.exports = {
+//     transferOwner;
+//     // transferEvent();
+// }
