@@ -94,42 +94,70 @@ app.delete('/api/users/:user_id', (req, res) => {
 // Put new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
 app.get('/api/ownership/newOwner/', (req, res) => {
 
-    var getChangeOwnerData = async function () {
+    var artHash = req.body.artHash;
+    var userToken = req.body.user_token;
+    var userName = req.body.userName;
 
-        var artHash = req.body.artHash;
-        var userToken = req.body.user_token;
-        var userName = req.body.userName;
-        let artSql = "";
-        let privSql = "";
-        let pubSql = "";
-        try {
-            let artQuery = await conn.query(artSql, (err, contract) => {
-                if (err) throw err;
-                return contract;
+    getContract(artHash).then(function (result) {
+        contractAddress = result;
+        console.log("contractAdress: ", contractAddress)
+    })
+
+    getPrivateKey(userToken).then(function (result) {
+        privateKey = result;
+        console.log("privateKey: ", privateKey)
+    })
+
+    getPublicKey(userName).then(function (result) {
+        publicKey = result;
+        console.log("publicKey: ", publicKey)
+    })
+    function getContract(artHash) {
+        return new Promise(function (resolve, reject) {
+
+            artHash = "irgendeinArthash";
+            let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
+
+            let artQuery = conn.query(artSql, (err, contract) => {
+                if (err)
+                    reject(err);
+
+                var contractAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
+                resolve(contractAdress);
             });
-
-            let privQuery = await conn.query(privSql, (err, privKey) => {
-                if (err) throw err;
-                return privKey;
-            });
-
-            let pubQuery = await conn.query(pubSql, (err, pubKey) => {
-                if (err) throw err;
-                return pubKey;
-            });
-
-        } catch (err) {
-            logger.error("Error while getting the data from the mySql database")
-        }
-
-
-
-
-
-        artQuery.then((contract) => {
-
         })
+    }
 
+    function getPrivateKey(userToken) {
+        return new Promise(function (resolve, reject) {
+
+            userToken = "00ue01838JDheu21s";
+            let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
+
+            let privQuery = conn.query(privSql, (err, privKey) => {
+                if (err)
+                    reject(err);
+
+                var privateKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
+                resolve(privateKey);
+            });
+        })
+    }
+
+    function getPublicKey(userName) {
+        return new Promise(function (resolve, reject) {
+
+            userName = "Kohli";
+            let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
+
+            let pubQuery = conn.query(pubSql, (err, pubKey) => {
+                if (err)
+                    reject(err);
+
+                var publicKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+                resolve(publicKey);
+            });
+        })
     }
     // contract.owner().then((owner) => {
 
