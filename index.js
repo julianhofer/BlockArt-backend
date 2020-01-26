@@ -98,6 +98,8 @@ app.delete('/api/users/:user_id', (req, res) => {
 // Get users with another or no artHash
 // SELECT username FROM blockart.users WHERE ( user_token != ( SELECT user_token FROM ownership WHERE arthash = 'dritterArthash'));
 
+// "UPDATE ownership SET (user_token= (SELECT user_token FROM users WHERE pubKey= " + "'" + newOwner + "'" + "AND ownership.artHash= " + "'" + artHash + "'";
+
 // Put new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
 app.get('/api/ownership/newOwner/', (req, res) => {
 
@@ -121,7 +123,7 @@ app.get('/api/ownership/newOwner/', (req, res) => {
         console.log("publicKey: ", publicKey)
 
         var contract = new ethers.Contract(contractAddress, abi, provider);
-        var wallet = new ethers.Wallet("0x" + privateKey, provider);
+        var wallet = new ethers.Wallet(privateKey, provider);
         var contractWithSigner = contract.connect(wallet);
 
         transferOwner();
@@ -132,7 +134,7 @@ app.get('/api/ownership/newOwner/', (req, res) => {
                 console.log("oldOwner: ", owner)
             });
             try {
-                let transferOs = await contractWithSigner.transferOwnership("0x" + publicKey);
+                let transferOs = await contractWithSigner.transferOwnership(publicKey);
                 console.log("TransferHash: ", transferOs.hash);
                 await transferOs.wait();
                 var newOwner = await contract.owner();
@@ -148,8 +150,15 @@ app.get('/api/ownership/newOwner/', (req, res) => {
             contract.artHash().then((artHash) => {
                 console.log("of Picture with artHash: ", artHash)
             });
-            let results = [newOwner, artHash];
-            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+
+            let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+                + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
+            let updateQuery = conn.query(sql, (err, result) => {
+                if (err) throw err;
+                let results = ["newOwner: ", newOwner, "artHash: ", artHash];
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+
+            })
 
         });
     })
@@ -157,7 +166,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
     function getContract(artHash) {
         return new Promise(function (resolve, reject) {
 
-            // artHash = "irgendeinArthash";
             let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
 
             let artQuery = conn.query(artSql, (err, contract) => {
@@ -165,7 +173,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
                     reject(err);
 
                 var contractsAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
-                console.log('parsed contractAdress: ', contractsAdress)
                 resolve(contractsAdress.toString());
             });
         })
@@ -174,7 +181,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
     function getPrivateKey(userToken) {
         return new Promise(function (resolve, reject) {
 
-            // userToken = "00ue01838JDheu21s";
             let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
 
             let privQuery = conn.query(privSql, (err, privKey) => {
@@ -182,7 +188,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
                     reject(err);
 
                 var privatKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
-                console.log('parsed privKey: ', privatKey)
                 resolve(privatKey.toString());
             });
         })
@@ -191,7 +196,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
     function getPublicKey(userName) {
         return new Promise(function (resolve, reject) {
 
-            // userName = "Kohli";
             let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
 
             let pubQuery = conn.query(pubSql, (err, pubKey) => {
@@ -199,7 +203,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
                     reject(err);
 
                 var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
-                console.log('parsed publicKey: ', publiKey)
                 resolve(publiKey.toString());
             });
         })
