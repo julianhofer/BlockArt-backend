@@ -94,11 +94,24 @@ app.delete('/api/users/:user_id', (req, res) => {
 });
 
 // Get artHash and userToken from Ownership
+app.get('/api/ownership/', (req, res) => {
+    let sql = "SELECT user_token, artHash FROM ownership";
+    let query = conn.query(sql, (err, results) => {
+        if (err) throw err;
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+    });
+});
 
 // Get users with another or no artHash
-// SELECT username FROM blockart.users WHERE ( user_token != ( SELECT user_token FROM ownership WHERE arthash = 'dritterArthash'));
+app.get('/api/users/arthash/:arthash', (req, res) => {
+    let sql = "SELECT username FROM users WHERE ( user_token != ( SELECT user_token FROM ownership WHERE ownership.artHash = " + "'" + req.params.arthash + "'))";
+    let query = conn.query(sql, (err, results) => {
+        if (err) throw err;
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+    });
+});
 
-// Put new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
+// Get new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
 app.get('/api/ownership/newOwner/', (req, res) => {
 
     var artHash = req.body.artHash;
