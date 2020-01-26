@@ -5,10 +5,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const ethers = require('ethers');
 const smartContract = require('./contracts/ArtWorkContract')
-// const Methods = require('./ethers')
-// const getContract = Methods.getContract;
-// const getPrivateKey = Methods.getPrivateKey;
-// const getPublicKey = Methods.getPublicKey;
 
 const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 const abi = smartContract.abi;
@@ -18,14 +14,6 @@ var publicKey;
 
 // parse application/json
 app.use(bodyParser.json());
-
-
-//connect to database
-// conn.connect((err) => {
-//     if (err) throw err;
-//     console.log('Mysql Connected...');
-// });
-
 
 //show all users
 app.get('/api/users', (req, res) => {

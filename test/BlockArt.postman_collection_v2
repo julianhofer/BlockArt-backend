@@ -1,0 +1,347 @@
+{
+	"info": {
+		"_postman_id": "2bea94a4-1459-4e16-b2b0-3c3d1e874cdc",
+		"name": "BlockArt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET - users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "blockarthdm.herokuapp.com/api/users",
+					"host": [
+						"blockarthdm",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "localhost:3000/api/users"
+			},
+			"response": []
+		},
+		{
+			"name": "POST - user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"firstname\": \"Franz\",\n            \"lastname\": \"Der Zweite\",\n            \"email\": \"franz@test.de\",\n            \"pubKey\": \"IULKJHDKUHGD75JGJHDOIHDJHGS\",\n            \"password\": \"beschdeLeben123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "localhost:3000/api/users\n\nstore userdata which should be sended to the server in the body as raw JSON"
+			},
+			"response": []
+		},
+		{
+			"name": "PUT - update user by id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"firstname\": \"Franz\",\n            \"lastname\": \"Der Erste\",\n            \"email\": \"franz1@test.de\",\n            \"pubKey\": \"IULKJHDKUHGD75JGJHDOIHDJHGS\",\n            \"password\": \"beschdeLeben123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/users/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				},
+				"description": "localhost:3000/api/1"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - user by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/users/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				},
+				"description": "localhost:3000/api/users/2"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - user by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/users/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				},
+				"description": "localhost:3000/api/users/1"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - user by pubKey",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/users/pubKey/IULGBNMGJKDHJGCJKGH778587KJH",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"pubKey",
+						"IULGBNMGJKDHJGCJKGH778587KJH"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Infura - current blocknumber",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jsonrpc\": \"2.0\",\n\t\"method\": \"eth_blockNumber\",\n\t\"params\": [],\n\t\"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mainnet.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad",
+					"protocol": "https",
+					"host": [
+						"mainnet",
+						"infura",
+						"io"
+					],
+					"path": [
+						"v3",
+						"6a9086d09c8a4e0e99c279571ee00bad"
+					]
+				},
+				"description": "https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad"
+			},
+			"response": []
+		},
+		{
+			"name": "infura - getbalance ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jsonrpc\": \"2.0\",\n\t\"method\": \"eth_getBalance\",\n\t\"params\": [\"0xBf4eD7b27F1d666546E30D74d50d173d20bca754\", \"latest\"],\n\t\"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mainnet.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad",
+					"protocol": "https",
+					"host": [
+						"mainnet",
+						"infura",
+						"io"
+					],
+					"path": [
+						"v3",
+						"6a9086d09c8a4e0e99c279571ee00bad"
+					]
+				},
+				"description": "https://mainnet.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad\n\nTheDAO Withdraw contract: 0xBf4eD7b27F1d666546E30D74d50d173d20bca754"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - changeOwner",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"artHash\": \"0x261f71bcd24c755c4be5d9e9e893d12d8a689602b5f38e80963e933b34d91561\",\n\t\"user_token\": \"00ue029t729sUEdjIE\",\n\t\"userName\": \"Kohli\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "blockarthdm.herokuapp.com/api/ownership/newOwner",
+					"host": [
+						"blockarthdm",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"ownership",
+						"newOwner"
+					]
+				},
+				"description": "needs body with artHash, user_token and userName"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - usernames with no or  another artHash",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/users/arthash/0x261f71bcd24c755c4be5d9e9e893d12d8a689602b5f38e80963e933b34d91561",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"arthash",
+						"0x261f71bcd24c755c4be5d9e9e893d12d8a689602b5f38e80963e933b34d91561"
+					]
+				},
+				"description": "localhost:3000/api/users/artHash"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - ownership",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/ownership/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"ownership",
+						""
+					]
+				},
+				"description": "localhost:3000/api/ownership/"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
