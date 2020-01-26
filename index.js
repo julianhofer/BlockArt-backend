@@ -21,11 +21,11 @@ app.use(bodyParser.json());
 
 
 //connect to database
-conn.connect((err) => {
-    if (err) throw err;
-    console.log('Mysql Connected...');
-});
-module.exports = conn;
+// conn.connect((err) => {
+//     if (err) throw err;
+//     console.log('Mysql Connected...');
+// });
+
 
 //show all users
 app.get('/api/users', (req, res) => {
@@ -97,8 +97,6 @@ app.delete('/api/users/:user_id', (req, res) => {
 
 // Get users with another or no artHash
 // SELECT username FROM blockart.users WHERE ( user_token != ( SELECT user_token FROM ownership WHERE arthash = 'dritterArthash'));
-
-// "UPDATE ownership SET (user_token= (SELECT user_token FROM users WHERE pubKey= " + "'" + newOwner + "'" + "AND ownership.artHash= " + "'" + artHash + "'";
 
 // Put new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
 app.get('/api/ownership/newOwner/', (req, res) => {
@@ -207,17 +205,6 @@ app.get('/api/ownership/newOwner/', (req, res) => {
             });
         })
     }
-
-
-
-    // contract.owner().then((owner) => {
-
-    //     if (req != owner) {
-    //         transferOwner.then((newOwner) => {
-    //             res.send(JSON.stringify({ "status": 200, "error": null, "response": newOwner }));
-    //         })
-    //     }
-    // });
 });
 
 
