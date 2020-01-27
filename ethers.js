@@ -1,8 +1,8 @@
-const wallets = require('./wallets');
-const privateKeys = require('./keys');
-const ethers = require('ethers');
-const smartContract = require('./contracts/ArtWorkContract')
-const conn = require('./index')
+// const wallets = require('./wallets');
+// const privateKeys = require('./keys');
+// const ethers = require('ethers');
+// const smartContract = require('./contracts/ArtWorkContract')
+// const conn = require('./index')
 // const { conn } = require('./DBConnection.js');
 
 
@@ -23,53 +23,53 @@ const conn = require('./index')
 
 
 
-function getContract(artHash) {
-    return new Promise(function (resolve, reject) {
+// function getContract(artHash) {
+//     return new Promise(function (resolve, reject) {
 
-        artHash = "irgendeinArthash";
-        let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
+//         artHash = "irgendeinArthash";
+//         let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
 
-        let artQuery = conn.query(artSql, (err, contract) => {
-            if (err)
-                reject(err);
+//         let artQuery = conn.query(artSql, (err, contract) => {
+//             if (err)
+//                 reject(err);
 
-            var contractAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
-            resolve(contractAdress);
-        });
-    })
-}
+//             var contractAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
+//             resolve(contractAdress);
+//         });
+//     })
+// }
 
-function getPrivateKey(userToken) {
-    return new Promise(function (resolve, reject) {
+// function getPrivateKey(userToken) {
+//     return new Promise(function (resolve, reject) {
 
-        userToken = "00ue01838JDheu21s";
-        let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
+//         userToken = "00ue01838JDheu21s";
+//         let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
 
-        let privQuery = conn.query(privSql, (err, privKey) => {
-            if (err)
-                reject(err);
+//         let privQuery = conn.query(privSql, (err, privKey) => {
+//             if (err)
+//                 reject(err);
 
-            var privateKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
-            resolve(privateKey);
-        });
-    })
-}
+//             var privateKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
+//             resolve(privateKey);
+//         });
+//     })
+// }
 
-function getPublicKey(userName) {
-    return new Promise(function (resolve, reject) {
+// function getPublicKey(userName) {
+//     return new Promise(function (resolve, reject) {
 
-        userName = "Kohli";
-        let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
+//         userName = "Kohli";
+//         let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
 
-        let pubQuery = conn.query(pubSql, (err, pubKey) => {
-            if (err)
-                reject(err);
+//         let pubQuery = conn.query(pubSql, (err, pubKey) => {
+//             if (err)
+//                 reject(err);
 
-            var publicKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
-            resolve(publicKey);
-        });
-    })
-}
+//             var publicKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+//             resolve(publicKey);
+//         });
+//     })
+// }
 
 // module.exports = {
 //     getContract: getContract(),

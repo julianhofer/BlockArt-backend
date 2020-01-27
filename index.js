@@ -129,9 +129,9 @@ app.get('/api/ownership/newOwner/', (req, res) => {
 
         async function transferOwner() {
 
-            contract.owner().then((owner) => {
-                console.log("oldOwner: ", owner)
-            });
+            // contract.owner().then((owner) => {
+            //     console.log("oldOwner: ", owner)
+            // });
             try {
                 let transferOs = await contractWithSigner.transferOwnership(publicKey);
                 console.log("TransferHash: ", transferOs.hash);
@@ -144,7 +144,7 @@ app.get('/api/ownership/newOwner/', (req, res) => {
         };
 
         contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-
+            console.log("previousOwner: ", previousOwner)
             console.log("newOwner: ", newOwner);
             contract.artHash().then((artHash) => {
                 console.log("of Picture with artHash: ", artHash)
