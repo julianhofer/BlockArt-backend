@@ -4,6 +4,7 @@ Hier befindet sich die Backendlogik für das Projekt BlockArt.
 Die Datenbank befindet sich auf einem MySql Server mit der URL sql88.your-server.de
 Deployt ist das Projekt auf einem Heroku Server und erreichbar unter der URL blockarthdm.herokuapp.com
 (Note: Da es sich um einen free Account handelt, geht der Server nach 30 min Inaktivität in den Standby und benötigt bei einem neuen API Aufruf ca 5 Sekunden bis er wieder reagiert.)
+Um die logs auf dem Heroku Server zu sehen wird der Befehl 'heroku logs -t --app blockarthdm' verwendet.
 
 Um das Projekt auszuführen, ist Node.js nötig. 
 
