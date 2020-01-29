@@ -110,16 +110,17 @@ app.get('/api/ownership/newOwner/', (req, res) => {
     getContract(artHash).then(function (result) {
         contractAddress = result;
         console.log("contractAdress: ", contractAddress)
-    })
 
-    getPrivateKey(userToken).then(function (result) {
-        privateKey = result;
-        console.log("privateKey: ", privateKey)
-    })
+        getPrivateKey(userToken).then(function (result) {
+            privateKey = result;
+            console.log("privateKey: ", privateKey)
 
-    getPublicKey(userName).then(function (result) {
-        publicKey = result;
-        console.log("publicKey: ", publicKey)
+            getPublicKey(userName).then(function (result) {
+                publicKey = result;
+                console.log("publicKey: ", publicKey)
+            })
+        })
+
 
         var contract = new ethers.Contract(contractAddress, abi, provider);
         var wallet = new ethers.Wallet(privateKey, provider);
