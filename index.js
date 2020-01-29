@@ -100,7 +100,7 @@ app.get('/api/users/arthash/:arthash', (req, res) => {
 });
 
 // Get new owner by artHash(get contract), userToken(get privKey), username(get pubKey)
-app.get('/api/ownership/newOwner/', (req, res) => {
+app.post('/api/ownership/newOwner', (req, res) => {
 
     var artHash = req.body.artHash;
     var userToken = req.body.user_token;
