@@ -124,12 +124,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
                 var wallet = new ethers.Wallet(privateKey, provider);
                 var contractWithSigner = contract.connect(wallet);
 
-                // if (contract || wallet || contractWithSigner != null) {
 
-                // }
-                // else {
-                //     setTimeout(transferOwner, 3000)
-                // }
                 async function transferOwner() {
 
                     // contract.owner().then((owner) => {
@@ -165,8 +160,12 @@ app.post('/api/ownership/newOwner', (req, res) => {
                     })
 
                 });
-
-                transferOwner();
+                if (contract || wallet || contractWithSigner != null) {
+                    transferOwner();
+                }
+                else {
+                    setTimeout(transferOwner, 4000)
+                }
 
             })
         })
