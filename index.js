@@ -118,6 +118,8 @@ app.post('/api/ownership/newOwner', (req, res) => {
             getPublicKey(userName).then(function (result) {
                 publicKey = result;
                 console.log("publicKey: ", publicKey)
+
+                transferOwner();
             })
         })
 
@@ -126,7 +128,6 @@ app.post('/api/ownership/newOwner', (req, res) => {
         var wallet = new ethers.Wallet(privateKey, provider);
         var contractWithSigner = contract.connect(wallet);
 
-        transferOwner();
 
         async function transferOwner() {
 
