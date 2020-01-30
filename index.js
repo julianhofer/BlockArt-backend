@@ -8,9 +8,9 @@ const smartContract = require('./contracts/ArtWorkContract')
 
 const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 const abi = smartContract.abi;
-// var contractAddress = null;
-// var privateKey = null;
-// var publicKey = null;
+var contractAddress = null;
+var privateKey = null;
+var publicKey = null;
 
 // parse application/json
 app.use(bodyParser.json());
@@ -109,7 +109,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
 
 
     getContract(artHash).then(function (result1) {
-        var contractAddress = result1;
+        contractAddress = result1;
         console.log("contractAdress: ", contractAddress)
 
         getPublicKey(userName).then(function (result3) {
@@ -121,16 +121,13 @@ app.post('/api/ownership/newOwner', (req, res) => {
             }
 
             getPrivateKey(userToken).then(function (result2) {
-                var privateKey = result2;
+                privateKey = result2;
                 console.log("privateKey: ", privateKey)
 
                 // setTimeout(function () {
                 //     console.log("wait a sek")
 
                 // }, 500)
-
-
-
 
                 var contract = new ethers.Contract(contractAddress, abi, provider);
                 var wallet = new ethers.Wallet(privateKey, provider);
@@ -237,10 +234,8 @@ app.post('/api/ownership/newOwner', (req, res) => {
                     if (err) {
                         reject("Error: ", err);
                     }
-                    console.log("pubKey die erste ", pubKey)
+
                     var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
-                    console.log("pubKey die zweite ", publiKey)
-                    console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
                 })
             } catch {
