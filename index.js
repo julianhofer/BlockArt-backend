@@ -105,7 +105,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var artHash = req.body.artHash;
     var userToken = req.body.user_token;
     var userName = req.body.userName;
-    console.log("username: ", userName)
+    console.log("Bild soll an ", userName, " verkauft werden.")
 
 
     getContract(artHash).then(function (result1) {
@@ -182,8 +182,6 @@ app.post('/api/ownership/newOwner', (req, res) => {
         })
     })
 
-
-
     function getContract(artHash) {
         return new Promise(function (resolve, reject) {
             try {
@@ -255,56 +253,57 @@ app.listen(process.env.PORT || 3000, function () {
     console.log('server running on port 3000', '');
 });
 
-const extendTimeoutMiddleware = (req, res, next) => {
-    const space = ' ';
-    let isFinished = false;
-    let isDataSent = false;
+// Methode um API respons über die limitierten 30 Sekunden herauszuzögern
+// const extendTimeoutMiddleware = (req, res, next) => {
+//     const space = ' ';
+//     let isFinished = false;
+//     let isDataSent = false;
 
-    // Only extend the timeout for API requests
-    if (!req.url.includes('/api')) {
-        next();
-        return;
-    }
+//     // Only extend the timeout for API requests
+//     if (!req.url.includes('/api')) {
+//         next();
+//         return;
+//     }
 
-    res.once('finish', () => {
-        isFinished = true;
-    });
+//     res.once('finish', () => {
+//         isFinished = true;
+//     });
 
-    res.once('end', () => {
-        isFinished = true;
-    });
+//     res.once('end', () => {
+//         isFinished = true;
+//     });
 
-    res.once('close', () => {
-        isFinished = true;
-    });
+//     res.once('close', () => {
+//         isFinished = true;
+//     });
 
-    res.on('data', (data) => {
-        // Look for something other than our blank space to indicate that real
-        // data is now being sent back to the client.
-        if (data !== space) {
-            isDataSent = true;
-        }
-    });
+//     res.on('data', (data) => {
+//         // Look for something other than our blank space to indicate that real
+//         // data is now being sent back to the client.
+//         if (data !== space) {
+//             isDataSent = true;
+//         }
+//     });
 
-    const waitAndSend = () => {
-        setTimeout(() => {
-            // If the response hasn't finished and hasn't sent any data back....
-            if (!isFinished && !isDataSent) {
-                // Need to write the status code/headers if they haven't been sent yet.
-                if (!res.headersSent) {
-                    res.writeHead(202);
-                }
+//     const waitAndSend = () => {
+//         setTimeout(() => {
+//             // If the response hasn't finished and hasn't sent any data back....
+//             if (!isFinished && !isDataSent) {
+//                 // Need to write the status code/headers if they haven't been sent yet.
+//                 if (!res.headersSent) {
+//                     res.writeHead(202);
+//                 }
 
-                res.write(space);
+//                 res.write(space);
 
-                // Wait another 15 seconds
-                waitAndSend();
-            }
-        }, 15000);
-    };
+//                 // Wait another 15 seconds
+//                 waitAndSend();
+//             }
+//         }, 15000);
+//     };
 
-    waitAndSend();
-    next();
-};
+//     waitAndSend();
+//     next();
+// };
 
-app.use(extendTimeoutMiddleware);
+// app.use(extendTimeoutMiddleware);
