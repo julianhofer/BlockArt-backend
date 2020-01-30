@@ -145,7 +145,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
                         + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
                     let updateQuery = conn.query(sql, (err, result) => {
                         if (err) {
-                            throw err;
+                            console.log("contract.on: ", err);
                         }
                         let results = ["newOwner: ", newOwner, "artHash: ", artHash];
                         res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
@@ -236,7 +236,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
                         reject("Error: ", err);
                     }
                     console.log("pubKey die erste ", pubKey)
-                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
+                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey)));
                     console.log("pubKey die zweite ", publiKey)
                     console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
