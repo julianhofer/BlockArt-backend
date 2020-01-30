@@ -236,7 +236,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
                         reject("Error: ", err);
                     }
                     console.log("pubKey die erste ", pubKey)
-                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey)));
+                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
                     console.log("pubKey die zweite ", publiKey)
                     console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
