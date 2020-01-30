@@ -230,7 +230,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
         return new Promise(function (resolve, reject) {
 
             try {
-                let pubSql = "SELECT pubKey FROM users WHERE username=" + '"' + userName + '"';
+                let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
 
                 let pubQuery = conn.query(pubSql, (err, pubKey) => {
                     if (err) {
