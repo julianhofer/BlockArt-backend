@@ -105,6 +105,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var artHash = req.body.artHash;
     var userToken = req.body.user_token;
     var userName = req.body.userName;
+    console.log("username: ", userName)
 
 
     getContract(artHash).then(function (result1) {
