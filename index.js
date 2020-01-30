@@ -110,15 +110,16 @@ app.post('/api/ownership/newOwner/reload', (req, res) => {
         contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
             contract.artHash().then((artHash) => {
             });
-            let sqlwrite = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
-                + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
+            console.log("Note: Das minen des SmartContracts auf der Blockchain hat länger als 30 Sekunden gedauert.")
+            // let sqlwrite = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+            //     + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
             let sqlread = "SELECT user_token, artHash FROM ownership";
 
-            let updateQuery = conn.query(sqlwrite, (err, result) => {
-                if (err) {
-                    console.log("Error while writing the new ownership to the MySql Database ", err);
-                }
-            })
+            // let updateQuery = conn.query(sqlwrite, (err, result) => {
+            //     if (err) {
+            //         console.log("Error while writing the new ownership to the MySql Database ", err);
+            //     }
+            // })
             let query = conn.query(sqlread, (err, results) => {
                 if (err) throw err;
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
