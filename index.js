@@ -111,23 +111,24 @@ app.post('/api/ownership/newOwner', (req, res) => {
         var contractAddress = result1;
         console.log("contractAdress: ", contractAddress)
 
+        getPublicKey(userName).then(function (result3) {
+            try {
+                publicKey = result3;
+                console.log("publicKey: ", publicKey)
+            } catch {
+                console.log("Error beim Aufruf der getPublicKey Methode")
+            }
 
-        getPrivateKey(userToken).then(function (result2) {
-            var privateKey = result2;
-            console.log("privateKey: ", privateKey)
+            getPrivateKey(userToken).then(function (result2) {
+                var privateKey = result2;
+                console.log("privateKey: ", privateKey)
 
-            // setTimeout(function () {
-            //     console.log("wait a sek")
+                // setTimeout(function () {
+                //     console.log("wait a sek")
 
-            // }, 500)
+                // }, 500)
 
-            getPublicKey(userName).then(function (result3) {
-                try {
-                    publicKey = result3;
-                    console.log("publicKey: ", publicKey)
-                } catch {
-                    console.log("Error beim Aufruf der getPublicKey Methode")
-                }
+
 
 
                 var contract = new ethers.Contract(contractAddress, abi, provider);
