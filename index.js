@@ -107,23 +107,23 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var userName = req.body.userName;
 
 
-    getContract(artHash).then(function (result) {
-        var contractAddress = result;
+    getContract(artHash).then(function (result1) {
+        var contractAddress = result1;
         console.log("contractAdress: ", contractAddress)
 
 
-        getPrivateKey(userToken).then(function (result) {
-            var privateKey = result;
+        getPrivateKey(userToken).then(function (result2) {
+            var privateKey = result2;
             console.log("privateKey: ", privateKey)
 
-            setTimeout(function () {
-                console.log("wait a sek")
+            // setTimeout(function () {
+            //     console.log("wait a sek")
 
-            }, 500)
+            // }, 500)
 
-            getPublicKey(userName).then(function (result) {
+            getPublicKey(userName).then(function (result3) {
                 try {
-                    publicKey = result;
+                    publicKey = result3;
                     console.log("publicKey: ", publicKey)
                 } catch {
                     console.log("Error beim Aufruf der getPublicKey Methode")
@@ -236,7 +236,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
                         reject("Error: ", err);
                     }
                     console.log("pubKey die erste ", pubKey)
-                    let publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
+                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
                     console.log("pubKey die zweite ", publiKey)
                     console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
