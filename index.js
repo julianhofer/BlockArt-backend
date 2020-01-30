@@ -228,7 +228,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
         })
     }
 
-    async function getPublicKey(userName) {
+    function getPublicKey(userName) {
         return new Promise(function (resolve, reject) {
 
             try {
@@ -238,7 +238,10 @@ app.post('/api/ownership/newOwner', (req, res) => {
                     if (err) {
                         reject("Error: ", err);
                     }
-                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+                    console.log("pubKey die erste ", pubKey)
+                    let publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+                    console.log("pubKey die zweite ", publiKey)
+                    console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
                 })
             } catch {
