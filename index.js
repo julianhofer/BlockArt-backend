@@ -106,24 +106,6 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var userToken = req.body.user_token;
     var userName = req.body.userName;
 
-    contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-        console.log("previousOwner: ", previousOwner)
-        console.log("newOwner: ", newOwner);
-        contract.artHash().then((artHash) => {
-            console.log("of Picture with artHash: ", artHash)
-        });
-
-        let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
-            + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
-        let updateQuery = conn.query(sql, (err, result) => {
-            if (err) {
-                throw err;
-            }
-            let results = ["newOwner: ", newOwner, "artHash: ", artHash];
-            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-        })
-
-    });
 
     getContract(artHash).then(function (result) {
         var contractAddress = result;
@@ -152,6 +134,24 @@ app.post('/api/ownership/newOwner', (req, res) => {
                 var wallet = new ethers.Wallet(privateKey, provider);
                 var contractWithSigner = contract.connect(wallet);
 
+                contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
+                    console.log("previousOwner: ", previousOwner)
+                    console.log("newOwner: ", newOwner);
+                    contract.artHash().then((artHash) => {
+                        console.log("of Picture with artHash: ", artHash)
+                    });
+
+                    let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+                        + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
+                    let updateQuery = conn.query(sql, (err, result) => {
+                        if (err) {
+                            throw err;
+                        }
+                        let results = ["newOwner: ", newOwner, "artHash: ", artHash];
+                        res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+                    })
+
+                });
 
                 async function transferOwner() {
 
