@@ -8,9 +8,9 @@ const smartContract = require('./contracts/ArtWorkContract')
 
 const provider = new ethers.providers.JsonRpcProvider('https://ropsten.infura.io/v3/6a9086d09c8a4e0e99c279571ee00bad');
 const abi = smartContract.abi;
-var contractAddress;
-var privateKey;
-var publicKey;
+// var contractAddress = null;
+// var privateKey = null;
+// var publicKey = null;
 
 // parse application/json
 app.use(bodyParser.json());
@@ -107,18 +107,21 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var userName = req.body.userName;
 
 
-
     getContract(artHash).then(function (result) {
-        contractAddress = result;
+        var contractAddress = result;
         console.log("contractAdress: ", contractAddress)
 
+
         getPrivateKey(userToken).then(function (result) {
-            privateKey = result;
+            var privateKey = result;
             console.log("privateKey: ", privateKey)
+
 
             getPublicKey(userName).then(function (result) {
                 publicKey = result;
                 console.log("publicKey: ", publicKey)
+
+
 
                 var contract = new ethers.Contract(contractAddress, abi, provider);
                 var wallet = new ethers.Wallet(privateKey, provider);
@@ -164,61 +167,75 @@ app.post('/api/ownership/newOwner', (req, res) => {
                     transferOwner();
                 }
                 else {
-                    setTimeout(transferOwner, 4000)
+                    console.log("SQL data came late. Check MySql Server Connection.")
+                    setTimeout(transferOwner, 3000)
                 }
-
             })
         })
-
     })
 
-    function getContract(artHash) {
+
+
+    async function getContract(artHash) {
         return new Promise(function (resolve, reject) {
+            try {
+                let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
+                let artQuery = conn.query(artSql, (err, contract) => {
 
-            let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
+                    if (err) {
+                        reject(err);
+                        console.log("Fehler bei dem Versuch die Contract Adresse von der Datenbank zu laden.")
+                    }
 
-            let artQuery = conn.query(artSql, (err, contract) => {
-                if (err)
-                    reject(err);
+                    var contractsAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
+                    resolve(contractsAdress.toString());
+                })
+            } catch {
+                console.log("Fehler bei dem Versuch die Contract Adresse von der Datenbank zu laden.")
+            }
+        });
 
-                var contractsAdress = Object.values(JSON.parse(JSON.stringify(contract[0])))
-                resolve(contractsAdress.toString());
-            });
+    }
+
+    async function getPrivateKey(userToken) {
+        return new Promise(function (resolve, reject) {
+            try {
+                let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
+
+                let privQuery = conn.query(privSql, (err, privKey) => {
+                    if (err) {
+                        reject(err);
+                        console.log("Fehler bei dem Versuch den PrivateKey von der Datenbank zu laden.")
+                    }
+                    var privatKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
+                    resolve(privatKey.toString());
+                })
+            } catch {
+                console.log("Fehler bei dem Versuch den PrivateKey von der Datenbank zu laden.")
+            }
         })
     }
 
-    function getPrivateKey(userToken) {
+    async function getPublicKey(userName) {
         return new Promise(function (resolve, reject) {
 
-            let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
+            try {
+                let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
 
-            let privQuery = conn.query(privSql, (err, privKey) => {
-                if (err)
-                    reject(err);
-
-                var privatKey = Object.values(JSON.parse(JSON.stringify(privKey[0])))
-                resolve(privatKey.toString());
-            });
+                let pubQuery = conn.query(pubSql, (err, pubKey) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+                    resolve(publiKey.toString());
+                })
+            } catch {
+                console.log("Fehler bei dem Versuch den PublicKey von der Datenbank zu laden.")
+            }
         })
     }
 
-    function getPublicKey(userName) {
-        return new Promise(function (resolve, reject) {
-
-            let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
-
-            let pubQuery = conn.query(pubSql, (err, pubKey) => {
-                if (err)
-                    reject(err);
-
-                var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
-                resolve(publiKey.toString());
-            });
-        })
-    }
-
-
-})
+});
 
 
 
