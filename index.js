@@ -110,16 +110,19 @@ app.post('/api/ownership/newOwner/reload', (req, res) => {
         contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
             contract.artHash().then((artHash) => {
             });
-
-            let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+            let sqlwrite = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
                 + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
-            let updateQuery = conn.query(sql, (err, result) => {
+            let sqlread = "SELECT user_token, artHash FROM ownership";
+
+            let updateQuery = conn.query(sqlwrite, (err, result) => {
                 if (err) {
-                    console.log("contract.on: ", err);
+                    console.log("Error while writing the new ownership to the MySql Database ", err);
                 }
-                let results = ["newOwner: ", newOwner, "artHash: ", artHash];
-                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             })
+            let query = conn.query(sqlread, (err, results) => {
+                if (err) throw err;
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+            });
 
         });
     })
