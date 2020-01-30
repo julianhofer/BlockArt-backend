@@ -107,6 +107,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var userName = req.body.userName;
 
 
+
     getContract(artHash).then(function (result) {
         var contractAddress = result;
         console.log("contractAdress: ", contractAddress)
@@ -116,61 +117,72 @@ app.post('/api/ownership/newOwner', (req, res) => {
             var privateKey = result;
             console.log("privateKey: ", privateKey)
 
-
-            getPublicKey(userName).then(function (result) {
-                publicKey = result;
-                console.log("publicKey: ", publicKey)
+            setTimeout(function () {
+                console.log("wait a sek")
 
 
 
-                var contract = new ethers.Contract(contractAddress, abi, provider);
-                var wallet = new ethers.Wallet(privateKey, provider);
-                var contractWithSigner = contract.connect(wallet);
-
-
-                async function transferOwner() {
-
-                    // contract.owner().then((owner) => {
-                    //     console.log("oldOwner: ", owner)
-                    // });
+                getPublicKey(userName).then(function (result) {
                     try {
-                        let transferOs = await contractWithSigner.transferOwnership(publicKey);
-                        console.log("TransferHash: ", transferOs.hash);
-                        await transferOs.wait();
-                        var newOwner = await contract.owner();
-                        // return newOwner;
-                    } catch (err) {
-                        console.log("Error while transfering Ownership: ", err)
+                        publicKey = result;
+                        console.log("publicKey: ", publicKey)
+                    } catch {
+                        console.log("Error beim Aufruf der getContract Methode")
                     }
-                };
+
+
+                    var contract = new ethers.Contract(contractAddress, abi, provider);
+                    var wallet = new ethers.Wallet(privateKey, provider);
+                    var contractWithSigner = contract.connect(wallet);
+
+
+                    async function transferOwner() {
+
+                        // contract.owner().then((owner) => {
+                        //     console.log("oldOwner: ", owner)
+                        // });
+                        try {
+                            let transferOs = await contractWithSigner.transferOwnership(publicKey);
+                            console.log("TransferHash: ", transferOs.hash);
+                            // let results = ["artHash: ", artHash];
+                            // res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+                            await transferOs.wait();
+                            var newOwner = await contract.owner();
+
+                        } catch (err) {
+                            console.log("Error while transfering Ownership: ", err)
+                        }
+                    };
 
 
 
-                contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-                    console.log("previousOwner: ", previousOwner)
-                    console.log("newOwner: ", newOwner);
-                    contract.artHash().then((artHash) => {
-                        console.log("of Picture with artHash: ", artHash)
+                    contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
+                        console.log("previousOwner: ", previousOwner)
+                        console.log("newOwner: ", newOwner);
+                        contract.artHash().then((artHash) => {
+                            console.log("of Picture with artHash: ", artHash)
+                        });
+
+                        let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+                            + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
+                        let updateQuery = conn.query(sql, (err, result) => {
+                            if (err) {
+                                throw err;
+                            }
+                            let results = ["newOwner: ", newOwner, "artHash: ", artHash];
+                            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+                        })
+
                     });
-
-                    let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
-                        + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
-                    let updateQuery = conn.query(sql, (err, result) => {
-                        if (err) throw err;
-                        let results = ["newOwner: ", newOwner, "artHash: ", artHash];
-                        res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-
-                    })
-
-                });
-                if (contract || wallet || contractWithSigner != null) {
-                    transferOwner();
-                }
-                else {
-                    console.log("SQL data came late. Check MySql Server Connection.")
-                    setTimeout(transferOwner, 3000)
-                }
-            })
+                    if (contract || wallet || contractWithSigner != null) {
+                        transferOwner();
+                    }
+                    else {
+                        console.log("SQL data came late. Check MySql Server Connection.")
+                        setTimeout(transferOwner, 3000)
+                    }
+                })
+            }, 500)
         })
     })
 
@@ -224,7 +236,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
 
                 let pubQuery = conn.query(pubSql, (err, pubKey) => {
                     if (err) {
-                        reject(err);
+                        reject("Error: ", err);
                     }
                     var publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
                     resolve(publiKey.toString());
@@ -245,3 +257,57 @@ app.get('/', (req, res) => res.send('Working!!!'));
 app.listen(process.env.PORT || 3000, function () {
     console.log('server running on port 3000', '');
 });
+
+const extendTimeoutMiddleware = (req, res, next) => {
+    const space = ' ';
+    let isFinished = false;
+    let isDataSent = false;
+
+    // Only extend the timeout for API requests
+    if (!req.url.includes('/api')) {
+        next();
+        return;
+    }
+
+    res.once('finish', () => {
+        isFinished = true;
+    });
+
+    res.once('end', () => {
+        isFinished = true;
+    });
+
+    res.once('close', () => {
+        isFinished = true;
+    });
+
+    res.on('data', (data) => {
+        // Look for something other than our blank space to indicate that real
+        // data is now being sent back to the client.
+        if (data !== space) {
+            isDataSent = true;
+        }
+    });
+
+    const waitAndSend = () => {
+        setTimeout(() => {
+            // If the response hasn't finished and hasn't sent any data back....
+            if (!isFinished && !isDataSent) {
+                // Need to write the status code/headers if they haven't been sent yet.
+                if (!res.headersSent) {
+                    res.writeHead(202);
+                }
+
+                res.write(space);
+
+                // Wait another 15 seconds
+                waitAndSend();
+            }
+        }, 15000);
+    };
+
+    waitAndSend();
+    next();
+};
+
+app.use(extendTimeoutMiddleware);
