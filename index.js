@@ -106,7 +106,24 @@ app.post('/api/ownership/newOwner', (req, res) => {
     var userToken = req.body.user_token;
     var userName = req.body.userName;
 
+    contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
+        console.log("previousOwner: ", previousOwner)
+        console.log("newOwner: ", newOwner);
+        contract.artHash().then((artHash) => {
+            console.log("of Picture with artHash: ", artHash)
+        });
 
+        let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
+            + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
+        let updateQuery = conn.query(sql, (err, result) => {
+            if (err) {
+                throw err;
+            }
+            let results = ["newOwner: ", newOwner, "artHash: ", artHash];
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+        })
+
+    });
 
     getContract(artHash).then(function (result) {
         var contractAddress = result;
@@ -120,75 +137,55 @@ app.post('/api/ownership/newOwner', (req, res) => {
             setTimeout(function () {
                 console.log("wait a sek")
 
-
-
-                getPublicKey(userName).then(function (result) {
-                    try {
-                        publicKey = result;
-                        console.log("publicKey: ", publicKey)
-                    } catch {
-                        console.log("Error beim Aufruf der getContract Methode")
-                    }
-
-
-                    var contract = new ethers.Contract(contractAddress, abi, provider);
-                    var wallet = new ethers.Wallet(privateKey, provider);
-                    var contractWithSigner = contract.connect(wallet);
-
-
-                    async function transferOwner() {
-
-                        // contract.owner().then((owner) => {
-                        //     console.log("oldOwner: ", owner)
-                        // });
-                        try {
-                            let transferOs = await contractWithSigner.transferOwnership(publicKey);
-                            console.log("TransferHash: ", transferOs.hash);
-                            // let results = ["artHash: ", artHash];
-                            // res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-                            await transferOs.wait();
-                            var newOwner = await contract.owner();
-
-                        } catch (err) {
-                            console.log("Error while transfering Ownership: ", err)
-                        }
-                    };
-
-
-
-                    contract.on("OwnershipTransferred", (previousOwner, newOwner) => {
-                        console.log("previousOwner: ", previousOwner)
-                        console.log("newOwner: ", newOwner);
-                        contract.artHash().then((artHash) => {
-                            console.log("of Picture with artHash: ", artHash)
-                        });
-
-                        let sql = "UPDATE ownership SET user_token = (SELECT user_token FROM users WHERE users.pubKey= "
-                            + "'" + newOwner + "') WHERE artHash = " + "'" + artHash + "'";
-                        let updateQuery = conn.query(sql, (err, result) => {
-                            if (err) {
-                                throw err;
-                            }
-                            let results = ["newOwner: ", newOwner, "artHash: ", artHash];
-                            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-                        })
-
-                    });
-                    if (contract || wallet || contractWithSigner != null) {
-                        transferOwner();
-                    }
-                    else {
-                        console.log("SQL data came late. Check MySql Server Connection.")
-                        setTimeout(transferOwner, 3000)
-                    }
-                })
             }, 500)
+
+            getPublicKey(userName).then(function (result) {
+                try {
+                    publicKey = result;
+                    console.log("publicKey: ", publicKey)
+                } catch {
+                    console.log("Error beim Aufruf der getPublicKey Methode")
+                }
+
+
+                var contract = new ethers.Contract(contractAddress, abi, provider);
+                var wallet = new ethers.Wallet(privateKey, provider);
+                var contractWithSigner = contract.connect(wallet);
+
+
+                async function transferOwner() {
+
+                    // contract.owner().then((owner) => {
+                    //     console.log("oldOwner: ", owner)
+                    // });
+                    try {
+                        let transferOs = await contractWithSigner.transferOwnership(publicKey);
+                        console.log("TransferHash: ", transferOs.hash);
+                        // let results = ["artHash: ", artHash];
+                        // res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+                        await transferOs.wait();
+                        var newOwner = await contract.owner();
+
+                    } catch (err) {
+                        console.log("Error while transfering Ownership: ", err)
+                    }
+                };
+
+                if (contract || wallet || contractWithSigner != null) {
+                    transferOwner();
+                }
+                else {
+                    console.log("SQL data came late. Check MySql Server Connection.")
+                    setTimeout(transferOwner, 3000)
+                }
+            })
+
         })
     })
 
 
 
-    async function getContract(artHash) {
+    function getContract(artHash) {
         return new Promise(function (resolve, reject) {
             try {
                 let artSql = "SELECT contract_adress FROM ownership WHERE artHash=" + "'" + artHash + "'";
@@ -209,7 +206,7 @@ app.post('/api/ownership/newOwner', (req, res) => {
 
     }
 
-    async function getPrivateKey(userToken) {
+    function getPrivateKey(userToken) {
         return new Promise(function (resolve, reject) {
             try {
                 let privSql = "SELECT privKey FROM users WHERE user_token=" + "'" + userToken + "'";
@@ -232,14 +229,14 @@ app.post('/api/ownership/newOwner', (req, res) => {
         return new Promise(function (resolve, reject) {
 
             try {
-                let pubSql = "SELECT pubKey FROM users WHERE username=" + "'" + userName + "'";
+                let pubSql = "SELECT pubKey FROM users WHERE username=" + '"' + userName + '"';
 
                 let pubQuery = conn.query(pubSql, (err, pubKey) => {
                     if (err) {
                         reject("Error: ", err);
                     }
                     console.log("pubKey die erste ", pubKey)
-                    let publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])))
+                    let publiKey = Object.values(JSON.parse(JSON.stringify(pubKey[0])));
                     console.log("pubKey die zweite ", publiKey)
                     console.log("pubKey die dritte ", publiKey.toString())
                     resolve(publiKey.toString());
