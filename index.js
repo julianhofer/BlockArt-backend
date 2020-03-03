@@ -12,6 +12,8 @@ const smartContract = require('./contracts/ArtWorkContract')
 // Die priv- und pubKeys sind aktuell nur in der mySql DB zu sehen. Die Wallets wie auch die sql db (dump im Ordner backup) laufen auf Julian Hofer (jh187). 
 // Hier brauch die HdM für ein vollwertiges Produkt eine eigene Wallet im prod ETH Netz. Deployment, Transaktionen, etc können jedoch weiterhin über Infura realisiert werden.
 // API sollte neu strukturiert werden (models, controller, routes, etc). Dieser Aufabu wird nur einem funktionalen Prototypen gerecht.
+// Außerdem wäre es in Bezug auf Integrität der Applikation sinnvoller, wenn die Blockchain Verbindung direkt von der App ausgelöst wird. Denn so ist nur der ArtOwner für seine Daten (privKey, etc) verantwortlich. 
+// Sollte weiterhin React native genutzt werden, gilt abzuwägen ob ethers.js oder web3.js zur BC Anbindung verwendet wird. Laut meiner Recherche ist es deutlich einfacher mit ethers.js
 
 // Um den Kauf und Weiterverkauf für den Endkunde so einfach wie möglich zu gestalten, kann es verschiedene Lösungen geben.
 // Hier ein paar Ideen:
