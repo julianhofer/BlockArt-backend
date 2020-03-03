@@ -1,0 +1,19 @@
+[
+{"type":"header","version":"4.9.4","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"blockart"},
+{"type":"table","name":"ownership","database":"blockart","data":
+[
+{"user_token":"00u13s356xViCxNF44x6","contract_adress":"0xe416eb8ac62354fc3603562096a78571965ddb0b","artHash":"0x2b12a12e72407b459e7ea7277c90ffea17de1e68e63eb5cf95db93fd1cbca6a4"},
+{"user_token":"00u13q3miRECJwBdZ4x6","contract_adress":"0x97f24f000a446c0df2c7f32e498808449e361164","artHash":"0x80beafea96f0fa5ba688e37fef8eae0bbeb7ebdce652f46657bc43f52eaebc26"},
+{"user_token":"00u13ql6sI3LLOhYB4x6","contract_adress":"0xb1918b9072c22b6745e05bc0089dae1196c13b55","artHash":"0xb26e61656485b5b9ce063b626c5d5c444e8eb0e449fa04ac02e3c81920811452"}
+]
+}
+,{"type":"table","name":"users","database":"blockart","data":
+[
+{"user_id":"1","user_token":"00u13ql6sI3LLOhYB4x6","pubKey":"0x5610c0e693BD1d3a96108Ef4Ad875658715f4827","privKey":"0xD1CB3D820C5C0C26BA51FEDFA044376B1E26CCA2E27A2B3CDE31C41DCE6A882D","isOwner":"0","username":"Vincent"},
+{"user_id":"2","user_token":"00u13s356xViCxNF44x6","pubKey":"0x5b3A61104f9Db9488880389F65b33eB0a1710D8B","privKey":"0x31478B590215BEAA18720CBD47EADDC8C6FBAC8ACD0BC9C763AEB2F233A0398A","isOwner":"0","username":"Julian"},
+{"user_id":"3","user_token":"00u13qmephKNaN3uD4x6","pubKey":"0x28daccf52936b687B9d280ac5d2A034F3338e196","privKey":"0xA14B81D91FF77034F78096B0660F1DA15F69C0D76509488CC0E7FE3CED1B2C91","isOwner":"0","username":"Jon"},
+{"user_id":"4","user_token":"00u13q3miRECJwBdZ4x6","pubKey":"0x74faA14a5BEb8C3B8f62bAb1057CD9A5A35039A0","privKey":"0xA3F17B0933E4A59FFA470C96C98BF7E84B619B0DA99CBA22B4AB6A6169804406","isOwner":"0","username":"Marco"}
+]
+}
+]
