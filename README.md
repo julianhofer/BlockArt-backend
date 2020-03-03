@@ -1,7 +1,7 @@
 # BlockArt Backend
 
 ## Hier befindet sich die Backendlogik für das Projekt BlockArt
-Die Datenbank befindet sich auf einem MySql Server mit der URL [sql88.your-server.de] (sql88.your-server.de).
+Die Datenbank befindet sich auf einem MySql Server mit der URL sql88.your-server.de.
 Deployt ist das Projekt auf einem Heroku Server und erreichbar unter der URL http://blockarthdm.herokuapp.com
 (Note: Da es sich um einen free Account handelt, geht der Server nach 30 min Inaktivität in den Standby und benötigt bei einem neuen API Aufruf ca 5 Sekunden bis er wieder reagiert.)
 
@@ -25,4 +25,6 @@ Installiert wird dann:
 
 Um das Projekt lokal zu starten wird der Befehl `node index` ausgeführt.
 
-Wenn man einzelne APIs testen will geht das am besten mit Postman, welchen man seperat installieren muss. Danach muss das `BlockArt.postman_collection.json´ welches sich im backend/test Ordner befindet importiert werden. In diesem habe ich bereits alle API Aufrufe definiert.
+Wenn man einzelne APIs testen will geht das am besten mit Postman, welchen man seperat installieren muss. Danach muss das `BlockArt.postman_collection.json´ (Note: nicht aktuell) welches sich im backend/test Ordner befindet importiert werden. In diesem habe ich bereits alle API Aufrufe definiert.
+
+Ein SQL und JSON dump der DB befinden sich in dem Ordner Backup. 
