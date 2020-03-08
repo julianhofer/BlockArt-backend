@@ -28,3 +28,5 @@ Um das Projekt lokal zu starten wird der Befehl `node index` ausgeführt.
 Wenn man einzelne APIs testen will geht das am besten mit Postman, welchen man seperat installieren muss. Danach muss das `BlockArt.postman_collection.json´ (Note: nicht aktuell) welches sich im backend/test Ordner befindet importiert werden. In diesem habe ich bereits alle API Aufrufe definiert.
 
 Ein SQL und JSON dump der DB befinden sich in dem Ordner Backup. 
+
+Die smartContracts und die React native App des Projektes befinden sich hier: https://github.com/julianhofer/BlockArt
